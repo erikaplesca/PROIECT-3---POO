@@ -9,12 +9,12 @@ Acest proiect reprezintă un sistem complet de gestionare a unui service auto, c
 - Managementul reparațiilor și serviciilor
 - Rapoarte financiare și de stare
 
-## <h2> ✅Implementarea Clasei Șablon: `Masina`</h2>
+## <h2> ✅Implementarea clasei template: `Masina`</h2>
 
 
 Clasa originală `Masina` era rigidă, putând stoca doar proprietari de tip `Client`. Prin transformarea ei într-un șablon, am obținut o **flexibilitate sporită** și o **reutilizare a codului**:
 
-**Implementarea originală:**
+**⬅️ Înainte** 
 ```cpp
 class Masina {
     // ...
@@ -22,7 +22,7 @@ class Masina {
 };
 ```
 
-**Implementarea șablon:**
+**🔁 După implementarea șablon:**
 ```cpp
 template <typename Proprietar>
 class Masina {
@@ -32,10 +32,8 @@ class Masina {
 ```
 
 ### <h3>Beneficii:</h3>
-1. **Abstracție crescută**: Putem folosi orice tip ca proprietar
-2. **Extensibilitate**: Adăugarea de noi tipuri de proprietari fără modificări
-3. **Specializare**: Comportament diferențiat pe tipuri
-4. **Siguranță**: Verificări de tip la compilare
+-  **Abstracție crescută**: Putem folosi orice tip ca proprietar
+-  **Extensibilitate**: Adăugarea de noi tipuri de proprietari fără modificări
 
 Exemple de utilizare:
 ```cpp
@@ -43,7 +41,7 @@ Masina<Client> masinaStandard; // Foloseste structura existenta
 Masina<Angajat> masinaCompanie; // În cazul în care mașina aparține unui angajat.
 ```
 
-## <h2> ✅ Atribut dependent de tipul Șablon</h2>
+## <h2> ✅ Atribut dependent de tipul Template</h2>
 Am adăugat un atribut generic `Proprietar` care depinde de parametrul template:
 
 ```cpp
@@ -72,11 +70,11 @@ void setProprietar(const Proprietar& proprietar) {
 ```
 
 Aceste metode:
-- Asigură acces controlat la atributul generic
+- Asigură acces la atribut
 - Permit manipularea proprietarului independent de tip
 
 ## <h2>✅ Implementare de funcții libere șablon (Friend)</h2>
-Am adăugat funcții template prietene pentru Citire/Afișare și operații specifice:
+Am adăugat funcții template prietene pentru Citire/Afișare și o operație specifica:
 
 ### <h3>Operator de citire/Afișare</h3>
 ```cpp
@@ -88,6 +86,7 @@ friend std::ostream& operator<<(std::ostream& os, const Masina<P>& masina);
 ```
 
 ### <h3>Funcție specializată pentru afișare</h3>
+Aceasta functie afiseaza doar marca masinii si este `friend`.
 ```cpp
 template <typename P>
 friend void afiseazaMarca(const Masina<P>& masina) {
@@ -98,7 +97,15 @@ friend void afiseazaMarca(const Masina<P>& masina) {
 ## <h2>✅ 3 Design Patterns implementate</h2>
 
 ### <h3>1. Factory Pattern (Pattern de creare)</h3>
-**Implementare:** `ClientFactory` și `MasinaClientFactory`
+<h4>Ce este?</h4>
+Factory Pattern centralizează și simplifică logica de creare a obiectelor complexe, permițând instanțierea entităților (ex: Client, Masina) fără a apela direct constructorii lor.
+
+<h4>Implementare</h4>
+
+In `ClientFactory` și `MasinaClientFactory`
+- Am creat o clasă ClientFactory, cu o metodă statică create, care construiește și returnează obiecte de tip Client.
+- Am creat o clasă MasinaClientFactory, cu o metodă statică create, care construiește și returnează obiecte de tip Masina<Client>.
+- În meniul aplicației, atunci când se adaugă o mașină, folosesc aceste Factory-uri pentru a crea atât clientul, cât și mașina, nu constructorii direct.
 
 ```cpp
 class ClientFactory {
@@ -118,8 +125,9 @@ public:
     }
 };
 ```
+<br>
 
-**Înainte** așa citeam datele de tip Client 
+**⬅️ Înainte așa citeam datele de tip Client** 
 ```cpp
 if (OPTIUNE == 1)
 			{
@@ -129,21 +137,23 @@ if (OPTIUNE == 1)
 				listaClienti.push_back(client);
 			}
 ```
-**După implementare `ClientFactory`**
+
+**🔁 După implementare `ClientFactory`**
 ```cpp
 std::string nume, tipClient;
 				Client client = ClientFactory::create(nume, tipClient);
 				listaClienti.push_back(client);
 ```
 <br>
+<br>
 
-**Înainte** așa citeam datele de tip Masina 
+**⬅️ Înainte așa citeam datele de tip Masina**
 ```cpp
 Masina masina;
 				fin >> masina;
 				listaMasini.push_back(masina);
 ```
-**După implementare `ClientFactory`**
+**🔁După implementare `ClientFactory`**
 ```cpp
 std::string nume, tipClient, nr, marca, model;
 				std::cin >> nume >> tipClient;
@@ -160,27 +170,70 @@ std::string nume, tipClient, nr, marca, model;
 - Simplifică adăugarea de noi tipuri de obiecte
 
 ### <h3>2. Strategy Pattern (Behavioral)</h3>
-**Implementare:** `PretServiceStrategy` și implementări
+<h4>Ce este?</h4>
+Strategy Pattern permite schimbarea dinamică a unei logici (ex: calculul prețului pentru un serviciu, filtrarea sau sortarea) fără a modifica clasele de bază.
 
+<h4>Implementare</h4>
+- Am definit o interfață PretServiceStrategy cu metoda virtuală calculeazaPret.
+- Am implementat mai multe strategii concrete (ex: PretStandard, PretPremium, PretDiscount).
+- Clasa ServiceAuto poate primi oricând o strategie diferită pentru calculul prețului, fără să fie nevoie să-i modific codul intern.
+
+- Vrem să putem calcula prețul unui serviciu în mai multe moduri:
+Standard (fără adaos)
+Premium (cu adaos de 50%)
+Discount (cu reducere)
+
+Avem clasa de baza PretServiceStrategy:
 ```cpp
+
 class PretServiceStrategy {
 public:
-    virtual float calculeazaPret(float costBaza) const = 0;
+    virtual double calculeazaPret(double baza) const = 0;
+    virtual ~PretServiceStrategy() = default;
 };
+```
 
+Din aceasta, facem const override cu functiile specifice calcularii fiecarui tip de pret:
+```cpp
 class PretStandard : public PretServiceStrategy {
 public:
-    float calculeazaPret(float costBaza) const override {
-        return costBaza * 1.2f; // +20% markup
+    double calculeazaPret(double baza) const override {
+        return baza;
     }
 };
+
 
 class PretPremium : public PretServiceStrategy {
 public:
-    float calculeazaPret(float costBaza) const override {
-        return costBaza * 1.1f; // +10% markup (discount pentru premium)
+    double calculeazaPret(double baza) const override {
+        return baza * 1.5;
     }
 };
+
+class PretDiscount : public PretServiceStrategy {
+public:
+    double calculeazaPret(double baza) const override {
+        return baza * 0.8;
+    }
+};
+
+```
+
+Apoi, setam strategia potrivita în contextul ServiceAuto:
+```cpp
+class ServiceAuto {
+    const PretServiceStrategy* strategiePret = nullptr;
+public:
+    void setStrategie(const PretServiceStrategy* strategie) {
+        strategiePret = strategie;
+    }
+    double calculeazaPretFinal(double baza) const {
+        if (!strategiePret) throw std::runtime_error("Strategia nu este setată!");
+        return strategiePret->calculeazaPret(baza);
+    }
+};
+
+
 ```
 
 **Beneficii:**
@@ -188,7 +241,39 @@ public:
 - Încapsulează algoritmii de calcul
 - Ușurează adăugarea de noi politici de preț
 
-### <h3>3. Singleton Pattern (Creational)</h3>
+Am implementat in main.cpp prin crearea unei noi optiuni, OPTIUNEA 13, care citeste un nr. factura si un tip de pret care sa fie calculat, si foloseste strategia potrivita de calculare a pretului.
+
+```cpp
+		if (OPTIUNE == 13) {
+				int nrFactura;
+				std::string tipPret;
+				fin >> nrFactura >> tipPret;
+				auto it = std::find_if(listaFacturi.begin(), listaFacturi.end(),
+					[nrFactura](const Factura& f) { return f.getNrFactura() == nrFactura; });
+				if (it == listaFacturi.end()) {
+					std::cout << "Factura nu a fost gasita!\n";
+					continue;
+				}
+				ServiceAuto service;
+				PretServiceStrategy* strategie = nullptr;
+				if (tipPret == "standard") {
+					strategie = new PretStandard();
+				} else if (tipPret == "premium") {
+					strategie = new PretPremium();
+				} else if (tipPret == "discount") {
+					strategie = new PretDiscount();
+				} else {std::cout << "Tip de pret necunoscut!\n";
+					continue;
+				}
+				service.setStrategie(strategie);
+				double pretBaza = it->calculeazaTotalCuTVA();
+				double pretFinal = service.calculeazaPretFinal(pretBaza);
+				std::cout << "Pretul final pentru factura " << nrFactura << " este: " << pretFinal << " RON\n";
+				delete strategie;
+			}
+```
+
+### <h3>3. Singleton Pattern (Logger)</h3>
 **Implementare:** `Logger` pentru înregistrarea activităților
 
 ```cpp
@@ -217,47 +302,8 @@ private:
 };
 ```
 
-**Beneficii:**
-- Acces global la un singur punct de logging
-- Asigură consistența fișierului de log
-- Previne concurența cu mutex
-- Simplifică gestionarea resurselor
+## <h2>Bibliografie</h2>
+https://refactoring.guru/design-patterns/strategy/cpp/example <br>
+https://stackoverflow.com/questions/11459294/is-there-a-way-of-implementing-the-strategy-pattern-using-variadic-templates <br>
 
-```mermaid
-classDiagram
-    class Masina~Proprietar~ {
-        -string nrInmatriculare
-        -string marca
-        -string model
-        -Proprietar proprietar
-        +getProprietar() Proprietar
-        +setProprietar(Proprietar) void
-    }
-    
-    class Logger {
-        -ofstream logfile
-        -mutex mtx
-        +getInstance() Logger
-        +log(string) void
-    }
-    
-    class PretServiceStrategy {
-        <<interface>>
-        +calculeazaPret(float) float
-    }
-    
-    class PretStandard {
-        +calculeazaPret(float) float
-    }
-    
-    class PretPremium {
-        +calculeazaPret(float) float
-    }
-    
-    class ClientFactory {
-        +create(string, string) Client
-    }
-    
-    PretServiceStrategy <|-- PretStandard
-    PretServiceStrategy <|-- PretPremium
-```
+
