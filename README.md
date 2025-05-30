@@ -1,110 +1,263 @@
-# Proiect2-POO
+# Proiect3-POO
 
 <h5>Autor: Plesca Maria-Erika, grupa 133</h5>
-<h3>Descriere</h3>
-Acest proiect implementează un sistem complet de gestiune pentru un service auto folosind principiile programării orientate pe obiecte în C++. Sistemul permite administrarea clienților, vehiculelor, angajaților, reparațiilor și facturilor, oferind o soluție minimală pentru gestionarea operațiunilor zilnice ale unui service auto.
 
-<h3>URMEAZA SA MAI UPDATEZ PROIECTUL (lucrez la mai multe mosteniri, funcții virtuale (pure), constructori virtuali (clone), dynamic_cast)</h3>
+## <h2>Introducere</h2>
+Acest proiect reprezintă un sistem complet de gestionare a unui service auto, care include:
+- Gestionarea clienților și mașinilor
+- Crearea și administrarea facturilor
+- Managementul reparațiilor și serviciilor
+- Rapoarte financiare și de stare
 
-<h3>Structura proiectului</h3>
-Proiectul este organizat într-o arhitectură modulară, cu fiecare entitate implementată ca o clasă separată:
-├── angajat.h, angajat.cpp    # Gestionează angajații service-ului <br>
-├── client.h, client.cpp      # Administrează datele clienților  <br>
-├── masina.h, masina.cpp      # Gestionează informații despre vehicule  <br>
-├── reparatie.h, reparatie.cpp # Înregistrează intervențiile efectuate  <br>
-├── factura.h, factura.cpp    # Gestionează facturile și plățile  <br>
-├── main.cpp                  # Conține bucla principală a aplicației  <br>
-├── Makefile                  # Configurație pentru compilare <br>
-└── input.in                  # Fișier cu date de intrare <br>
+## <h2> ✅Implementarea Clasei Șablon: `Masina`</h2>
 
 
-<h3>Funcționalități principale</h3>
-Sistemul oferă următoarele funcționalități: <br>
-- Gestionarea  lienților: Adăugarea și afișarea clienților (persoane fizice și juridice). <br>
-- Gestiunea vehiculelor: Înregistrarea și afișarea mașinilor cu detalii de identificare. <br>
-- Administrarea angajaților: Adăugarea și listarea angajaților și stațiilor de lucru. <br>
-- Înregistrarea reparațiilor: Documentarea intervențiilor cu detalii despre mașină, client, angajat și costul reparației. <br>
-- Interschimbarea stațiilor de lucru: Modificarea asignărilor pentru reparații. <br>
-- Calculul costurilor: Calcularea sumei totale de plată pentru un client specific. <br>
-- Generarea facturilor: Crearea și gestionarea facturilor cu calculul TVA și discount-urilor. <br>
+Clasa originală `Masina` era rigidă, putând stoca doar proprietari de tip `Client`. Prin transformarea ei într-un șablon, am obținut o **flexibilitate sporită** și o **reutilizare a codului**:
 
+**Implementarea originală:**
+```cpp
+class Masina {
+    // ...
+    Client m_proprietar; // Tip fix
+};
+```
 
-<h3>Formatul datelor de intrare (input.in) </h3>
-Sistemul citește date din fișierul input.in care conține, pe fiecare linie, un număr de opțiune urmat de datele specifice operației:<br>
+**Implementarea șablon:**
+```cpp
+template <typename Proprietar>
+class Masina {
+    // ...
+    Proprietar proprietar; // Tip generic
+};
+```
 
+### <h3>Beneficii:</h3>
+1. **Abstracție crescută**: Putem folosi orice tip ca proprietar
+2. **Extensibilitate**: Adăugarea de noi tipuri de proprietari fără modificări
+3. **Specializare**: Comportament diferențiat pe tipuri
+4. **Siguranță**: Verificări de tip la compilare
 
-1 [Numele clientului] [Tip client]                # Adăugare client <br>
-2                                                 # Afișare clienți <br>
-3 [Nr.Inm] [Marca] [Model] [Nume proprietar] [Tip proprietar] # Adăugare mașină <br>
-4                                                 # Afișare mașini <br>
-5 [Numele angajatului] [Statia de lucru]          # Adăugare angajat <br>
-6                                                 # Afișare angajați <br>
-7 [Nr.Inm] [Marca] [Model] [Nume proprietar] [Tip proprietar] [Nume angajat] [Statia de lucru] [Tip reparatie] [Cost] # Adăugare reparație <br>
-8                                                 # Afișare reparații <br>
-9 [Nr. Reparatiei 1] [Nr. Reparatiei 2]           # Interschimbare stații de lucru <br>
-10 [Numele clientului]                            # Afișare sumă totală de plată <br>
-11 [Detalii factură]                              # Generare factură <br>
-12 [ID factură]                                   # Afișare factură specifică <br>
+Exemple de utilizare:
+```cpp
+Masina<Client> masinaStandard; // Foloseste structura existenta
+Masina<Angajat> masinaCompanie; // În cazul în care mașina aparține unui angajat.
+```
 
-Exemplu concret din input.in: <br>
-1 Irina-Petronela Persoana_fizica  <br>
-1 Indaco_SRL Persoana_juridica <br>
-3 NT56DRE VOLVO X60 Irina-Petronela Persoana_fizica <br>
-7 NT56DRE VOLVO X60 Irina-Petronela Persoana_fizica Vasile-Cozma 2 Geometrie_roti 1187.56 <br>
+## <h2> ✅ Atribut dependent de tipul Șablon</h2>
+Am adăugat un atribut generic `Proprietar` care depinde de parametrul template:
 
-<h3>Implementare OOP</h3>
+```cpp
+template <typename Proprietar>
+class Masina {
+    // ...
+    Proprietar proprietar; //  Atribut dependent de T
+};
+```
 
-<h4>Clase și Ierarhii</h4>
-Proiectul conține următoarele clase: <br>
-Client: Stochează informații despre clienți (nume, tip client). <br>
-Mașină: Gestionează date despre vehicule (nr. înmatriculare, marcă, model, proprietar). <br>
-Angajat: Administrează informații despre angajați (nume, stația de lucru). <br>
-Reparație: Înregistrează detalii despre reparații (mașină, angajat, tip reparație, cost). <br>
-Factură: Gestionează facturile (client, reparații, data emitere, TVA, status plată). <br>
+Acest atribut permite:
+- Stocarea oricărui tip de proprietar
+- Accesarea datelor proprietarului prin metode specifice
 
-<h4>Constructori și Destructori </h4>
-Fiecare clasă implementează: <br>
-<ul>
-<li>Constructor implicit: Inițializează membrii cu valori implicite</li>
-<li>Constructor parametrizat: Permite crearea obiectelor cu valori specifice</li>
-<li>Constructor de copiere: Pentru copierea corectă a obiectelor</li>
-<li>Operator de atribuire: Pentru asignarea corectă a obiectelor</li>
-<li>Destructor: Pentru eliberarea resurselor (deși în acest proiect sunt simple, fără alocare dinamică)</li>
-</ul>
+## <h2>✅ Funcție membră dependentă de tipul șablon</h2>
+Am implementat metode care depind direct de tipul template:
 
-Exemplu din clasa "Client": <br>
-<code>Client();  // Constructor implicit <br>
-Client(const std::string& m_nume, const std::string& m_tipClient);  // Constructor parametrizat<br>
-~Client();  // Destructor<br>
-Client(const Client& other);  // Constructor de copiere<br>
-Client& operator=(const Client& other);  // Operator de atribuire<br>
-</code>
+```cpp
+Proprietar getProprietar() const { 
+    return proprietar;
+}
 
-<h4>Relațiile între clase</h4>
-Proiectul folosește concepte OOP pentru a modela relațiile dintre entități:
-<ul>
-  <li>Compoziție: Clasa Mașină conține un obiect Client (proprietarul)</li>
-  <li>Agregare: Clasa Reparație agregă obiecte Mașină și Angajat</li>
-  <li>Colecții: Clasa Factură utilizează un vector de obiecte Reparație</li>
-</ul>
+void setProprietar(const Proprietar& proprietar) { 
+    this->proprietar = proprietar;
+}
+```
 
-<h4>Exemple de utilizare</h4>
-Sistemul poate fi utilizat pentru următoarele scenarii: <br>
-<ul>
-  <li>Înregistrarea unui nou client în sistem</li>
-  <li>Adăugarea mașinilor clienților</li>
-  <li>Înregistrarea angajaților service-ului</li>
-  <li>Documentarea reparațiilor efectuate</li>
-  <li>Generarea facturilor pentru clienți</li>
-  <li>Calculul costurilor totale pentru un client</li>
-  <li>Interschimbarea stațiilor de lucru între reparații</li>
-</ul>
+Aceste metode:
+- Asigură acces controlat la atributul generic
+- Permit manipularea proprietarului independent de tip
 
-<h3>Bibliografie</h3>
-https://www.youtube.com/watch?v=oRBK0Mh_gG0 <br>
-https://www.makeareadme.com <br>
-https://github.com/MicrosoftDocs/cpp-docs/blob/main/docs/cpp/virtual-functions.md <br>
-https://www.reddit.com/r/cpp_questions/comments/15o5049/i_created_a_c_oop_template_kind_of_a_newbie_can/ <br>
-https://www.youtube.com/watch?v=6yp0C5G5EKo <br>
-https://bito.ai/resources/virtual-functions-in-c-plus/ <br>
-https://www.youtube.com/watch?v=v2_Pth8MrKA&t=550s <br>
+## <h2>✅ Implementare de funcții libere șablon (Friend)</h2>
+Am adăugat funcții template prietene pentru Citire/Afișare și operații specifice:
+
+### <h3>Operator de citire/Afișare</h3>
+```cpp
+template <typename P>
+friend std::istream& operator>>(std::istream& is, Masina<P>& masina);
+
+template <typename P>
+friend std::ostream& operator<<(std::ostream& os, const Masina<P>& masina);
+```
+
+### <h3>Funcție specializată pentru afișare</h3>
+```cpp
+template <typename P>
+friend void afiseazaMarca(const Masina<P>& masina) {
+    std::cout << "Marca masinii este: " << masina.marca << std::endl;
+}
+```
+
+## <h2>✅ 3 Design Patterns implementate</h2>
+
+### <h3>1. Factory Pattern (Pattern de creare)</h3>
+**Implementare:** `ClientFactory` și `MasinaClientFactory`
+
+```cpp
+class ClientFactory {
+public:
+    static Client create(const std::string& nume, const std::string& tip) {
+        return Client(nume, tip);
+    }
+};
+
+class MasinaClientFactory {
+public:
+    static Masina<Client> create(const std::string& nrInm, 
+                                const std::string& marca,
+                                const std::string& model,
+                                const Client& proprietar) {
+        return Masina<Client>(nrInm, marca, model, proprietar);
+    }
+};
+```
+
+**Înainte** așa citeam datele de tip Client 
+```cpp
+if (OPTIUNE == 1)
+			{
+				// Citirea unui nou client
+				Client client;
+				fin >> client;
+				listaClienti.push_back(client);
+			}
+```
+**După implementare `ClientFactory`**
+```cpp
+std::string nume, tipClient;
+				Client client = ClientFactory::create(nume, tipClient);
+				listaClienti.push_back(client);
+```
+<br>
+
+**Înainte** așa citeam datele de tip Masina 
+```cpp
+Masina masina;
+				fin >> masina;
+				listaMasini.push_back(masina);
+```
+**După implementare `ClientFactory`**
+```cpp
+std::string nume, tipClient, nr, marca, model;
+				std::cin >> nume >> tipClient;
+				Client client = ClientFactory::create(nume, tipClient);
+
+				std::cin >> nr >> marca >> model;
+				Masina<Client> masina = MasinaClientFactory::create(nr, marca, model, client);
+
+				listaMasini.push_back(masina);
+```
+
+**Beneficii:**
+- Încapsulează logica de creare a obiectelor
+- Simplifică adăugarea de noi tipuri de obiecte
+
+### <h3>2. Strategy Pattern (Behavioral)</h3>
+**Implementare:** `PretServiceStrategy` și implementări
+
+```cpp
+class PretServiceStrategy {
+public:
+    virtual float calculeazaPret(float costBaza) const = 0;
+};
+
+class PretStandard : public PretServiceStrategy {
+public:
+    float calculeazaPret(float costBaza) const override {
+        return costBaza * 1.2f; // +20% markup
+    }
+};
+
+class PretPremium : public PretServiceStrategy {
+public:
+    float calculeazaPret(float costBaza) const override {
+        return costBaza * 1.1f; // +10% markup (discount pentru premium)
+    }
+};
+```
+
+**Beneficii:**
+- Permite schimbarea dinamică a strategiilor de preț
+- Încapsulează algoritmii de calcul
+- Ușurează adăugarea de noi politici de preț
+
+### <h3>3. Singleton Pattern (Creational)</h3>
+**Implementare:** `Logger` pentru înregistrarea activităților
+
+```cpp
+class Logger {
+public:
+    static Logger& getInstance() {
+        static Logger instance;
+        return instance;
+    }
+
+    void log(const std::string& message) {
+        std::lock_guard<std::mutex> lock(mtx);
+        logfile << message << std::endl;
+    }
+    
+    // Eliminăm copierea
+    Logger(const Logger&) = delete;
+    Logger& operator=(const Logger&) = delete;
+
+private:
+    Logger() : logfile("log.txt", std::ios_base::app) {}
+    ~Logger() { if (logfile.is_open()) logfile.close(); }
+
+    std::ofstream logfile;
+    std::mutex mtx;
+};
+```
+
+**Beneficii:**
+- Acces global la un singur punct de logging
+- Asigură consistența fișierului de log
+- Previne concurența cu mutex
+- Simplifică gestionarea resurselor
+
+```mermaid
+classDiagram
+    class Masina~Proprietar~ {
+        -string nrInmatriculare
+        -string marca
+        -string model
+        -Proprietar proprietar
+        +getProprietar() Proprietar
+        +setProprietar(Proprietar) void
+    }
+    
+    class Logger {
+        -ofstream logfile
+        -mutex mtx
+        +getInstance() Logger
+        +log(string) void
+    }
+    
+    class PretServiceStrategy {
+        <<interface>>
+        +calculeazaPret(float) float
+    }
+    
+    class PretStandard {
+        +calculeazaPret(float) float
+    }
+    
+    class PretPremium {
+        +calculeazaPret(float) float
+    }
+    
+    class ClientFactory {
+        +create(string, string) Client
+    }
+    
+    PretServiceStrategy <|-- PretStandard
+    PretServiceStrategy <|-- PretPremium
+```
