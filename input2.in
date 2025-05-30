@@ -1,0 +1,40 @@
+7
+B123ABC Dacia Logan Ionescu Persoana_fizica Angajat1 1 Schimb_ulei 1 4.5
+7
+B234DEF Renault Megane Popescu Persoana_juridica Angajat2 2 Diagnoza 3
+7
+B345GHI VW Golf Ionescu Persoana_fizica Angajat1 1 Geometrie_roti 2
+7
+B456JKL Ford Focus Popescu Persoana_juridica Angajat2 2 Electrica 350.0
+7
+B567MNO Opel Astra Ionescu Persoana_fizica Angajat1 1 Vopsire 2.5
+8
+10
+Ion_Popescu Persoana_fizica
+01/01/2025 1001 19 0 3
+B111AAA Dacia Logan Ion_Popescu Persoana_fizica Angajat1 1 Schimb_ulei 1 4.0
+B111AAA Dacia Logan Ion_Popescu Persoana_fizica Angajat2 2 Diagnoza 2
+B111AAA Dacia Logan Ion_Popescu Persoana_fizica Angajat3 3 Electrica 250.0
+10
+Maria_Cretu Persoana_juridica
+01/01/2025 1002 19 0 4
+B222BBB Renault Clio Maria_Cretu Persoana_fizica Angajat1 1 Schimb_ulei 0 3.5
+B222BBB Renault Clio Maria_Cretu Persoana_fizica Angajat2 2 Geometrie_roti 2
+B222BBB Renault Clio Maria_Cretu Persoana_fizica Angajat3 3 Vopsire 2.2
+B222BBB Renault Clio Maria_Cretu Persoana_fizica Angajat4 4 Diagnoza 4
+10
+Indaco_SRL Persoana_juridica
+01/01/2027 1002 19 0 4
+B201HUY Renault Clio Indaco_SRL Persoana_juridica Angajat1 1 Schimb_ulei 0 3.5
+B201HUY Renault Clio Indaco_SRL Persoana_juridica Angajat2 2 Geometrie_roti 2
+B201HUY Renault Clio Indaco_SRL Persoana_juridica Angajat3 3 Vopsire 2.2
+B201HUY Renault Clio Indaco_SRL Persoana_juridica Angajat4 4 Diagnoza 4
+10
+Romsilva_SA Persoana_juridica
+12/05/2025 1003 19 0 1
+NT90ERF Volkswagen Golf Romsilva_SA Persoana_juridica Angajat 3 Vopsire 3.5
+12 
+Maria_Cretu
+13
+1001
+premium
