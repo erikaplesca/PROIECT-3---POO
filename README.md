@@ -12,7 +12,8 @@ Acest proiect reprezintă un sistem complet de gestionare a unui service auto, c
 ## <h2> ✅Implementarea clasei template: `Masina`</h2>
 
 
-Clasa originală `Masina` era rigidă, putând stoca doar proprietari de tip `Client`. Prin transformarea ei într-un șablon, am obținut o **flexibilitate sporită** și o **reutilizare a codului**:
+Clasa originală `Masina` putea stoca doar proprietari de tip `Client`. 
+Prin transformarea ei într-o clasa de tip șablon, poate folosi orice tip ca Proprietar (Angajat, de pilda).
 
 **⬅️ Înainte** 
 ```cpp
@@ -32,8 +33,9 @@ class Masina {
 ```
 
 ### <h3>Beneficii:</h3>
--  **Abstracție crescută**: Putem folosi orice tip ca proprietar
--  **Extensibilitate**: Adăugarea de noi tipuri de proprietari fără modificări
+- Am obținut o **flexibilitate sporită** și o **reutilizare a codului**:
+-  **Abstracție crescută**: Pot folosi orice tip ca proprietar
+-  **Extensibilitate**: Pot sa adaug noi tipuri de proprietari fără modificări
 
 Exemple de utilizare:
 ```cpp
