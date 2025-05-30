@@ -41,6 +41,12 @@ Masina<Client> masinaStandard; // Foloseste structura existenta
 Masina<Angajat> masinaCompanie; // În cazul în care mașina aparține unui angajat.
 ```
 
+**De ce am toate implementarile pentru `Masina` in `masina.h`?**
+Când instanțiez un template, compilatorul creează o nouă clasă cu tipul respectiv. 
+Pentru a face asta, are nevoie să vadă implementarea metodelor template-ului. 
+Dacă implementarea nu este în header, nu va putea genera codul necesar. 
+
+
 ## <h2> ✅ Atribut dependent de tipul Template</h2>
 Am adăugat un atribut generic `Proprietar` care depinde de parametrul template:
 
