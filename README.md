@@ -411,3 +411,4 @@ Raport neplati generat pentru client: Maria_Cretu, facturi neplatite: 1
 Pret calculat pentru factura #1001, tip pret: premium, valoare: 1356.600037
 ```
 
+<h3>Pentru a asigura că nu se suprascrie log.txt, în Makefile am adaugat sa șteargă și fișierul log.txt la comanda <i>make clean</i></h3>
