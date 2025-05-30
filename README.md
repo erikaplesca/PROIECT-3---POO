@@ -274,7 +274,16 @@ Am implementat in main.cpp prin crearea unei noi optiuni, OPTIUNEA 13, care cite
 ```
 
 ### <h3>3. Singleton Pattern (Logger)</h3>
-**Implementare:** `Logger` pentru înregistrarea activităților
+**Implementare:** `Logger`
+
+Am implementat un Logger ca Singleton, ceea ce înseamnă că orice componentă a aplicației poate loga mesaje centralizat, fără riscul de a exista mai multe instanțe de logger. Singleton-ul asigură că, indiferent de unde apelez logarea, folosesc mereu aceeași instanță, deci toate mesajele ajung în același fișier ("log.txt").
+
+Loggerul poate fi folosit oriunde în proiect cu `Logger::getInstance().log("mesaj")`
+
+- Logger-ul este o clasă cu constructor privat, deci nu poți crea instanțe cu new sau direct.
+- Singura cale de acces este Logger::getInstance(), care returnează mereu aceeași instanță (singleton).
+- Orice mesaj dat cu log() va fi scris în același fișier ("log.txt"), indiferent de unde apelezi logarea.
+- Nu se poate copia sau atribui loggerul (constructorul de copiere și operatorul de atribuire sunt șterse).
 
 ```cpp
 class Logger {
@@ -302,8 +311,53 @@ private:
 };
 ```
 
+In main.cpp, l-am folosit asa:
+```cpp
+Logger::getInstance().log("Masina adaugata: " + nr + ", marca: " + marca + ", model: " + model + ", proprietar: " + nume);
+```
+
+```cpp
+Logger::getInstance().log("Masina adaugata in istoric la reparatie: " + masinaReparatie.getNrInm());
+```
+
+Inclusiv atunci cand intervine o eroare, aceasta este inregisrata:
+```cpp
+Logger::getInstance().log(std::string("Eroare proprietar invalid la adaugare reparatie: ") + e.what());
+```
+
+Iar dupa ce am rulat codul, fisierul `log.txt` contine asta:
+
+```
+Masina adaugata in istoric la reparatie: B123ABC
+Reparatie adaugata pentru masina: B123ABC
+Masina adaugata in istoric la reparatie: B234DEF
+Reparatie adaugata pentru masina: B234DEF
+Masina adaugata in istoric la reparatie: B345GHI
+Reparatie adaugata pentru masina: B345GHI
+Masina adaugata in istoric la reparatie: B456JKL
+Reparatie adaugata pentru masina: B456JKL
+Masina adaugata in istoric la reparatie: B567MNO
+Reparatie adaugata pentru masina: B567MNO
+Afisare lista reparatii.
+Factura noua generata: #1001, client: Ion_Popescu
+Factura noua generata: #1002, client: Maria_Cretu
+Eroare factura duplicata: 
+ !!!!! 
+ Numarul de factura 1002 a mai fost folosit!
+ !!!!! 
+ 
+Factura noua generata: #1003, client: Romsilva_SA
+Raport neplati generat pentru client: Maria_Cretu, facturi neplatite: 1
+Pret calculat pentru factura #1001, tip pret: premium, valoare: 1356.600037
+
+```
+
 ## <h2>Bibliografie</h2>
 https://refactoring.guru/design-patterns/strategy/cpp/example <br>
 https://stackoverflow.com/questions/11459294/is-there-a-way-of-implementing-the-strategy-pattern-using-variadic-templates <br>
-
-
+https://ocw.cs.pub.ro/courses/poo-is-aa/laboratoare/09 <br>
+http://vega.unitbv.ro/~cataron/Courses/PCLPI/PCLP1_Capitolul12.pdf<br>
+https://refactoring.guru/design-patterns/factory-method/cpp/example<br>
+https://www.codeproject.com/Articles/5384546/Factory-Design-Pattern-in-Cplusplus<br>
+https://sourcemaking.com/design_patterns/factory_method/cpp/1<br>
+https://gist.github.com/kevinkreiser/39f2e39273c625d96790<br>
