@@ -1,6 +1,6 @@
-# Proiect3-POO
+# Sistem de gestiune a unui service auto in C++
 
-<h5>Autor: Plesca Maria-Erika, grupa 133</h5>
+<h5>Autor: Plesca Maria-Erika</h5>
 
 ## <h2>Introducere</h2>
 Acest proiect reprezintă un sistem complet de gestionare a unui service auto, care include:
